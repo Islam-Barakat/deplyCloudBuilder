@@ -1,0 +1,19 @@
+---
+# vars file for roles/deplyCloudBuilder
+
+mgmtVcsFQDN: 192.168.109.120
+vCenterUser: "administrator@vsphere.local"
+vCenterPassword: "VMware123!"
+vCenterDataCenter: "Datacenter"
+vCenterCluster: "physical hosts"
+vCenterDatastore: "esx01-datastore1"
+cloudBuilderVmName: "cloudBuilder401"
+networkMgmt: "VM Network"
+cloudBuilderOva: "/root/VMware-Cloud-Builder-5.2.1.0-24307856_OVF10.ova"
+cloudBuilderPassword: "VMware123!VMware123!"
+cloudBuilderIP: "192.168.109.152"
+cloudBuilderNetmask: "255.255.255.0"
+cloudBuilderDNS: "192.168.109.123"
+cloudBuilderNTP: "192.168.109.123"
+cloudBuilderGW: "192.168.109.253"
+

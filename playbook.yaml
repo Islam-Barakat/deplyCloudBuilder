@@ -1,0 +1,4 @@
+- name: Deploy Cloud Builder
+  hosts: localhost
+  roles:
+    - deplyCloudBuilder

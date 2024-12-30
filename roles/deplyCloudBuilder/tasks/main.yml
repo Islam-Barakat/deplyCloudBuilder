@@ -1,0 +1,50 @@
+---
+# tasks file for roles/deplyCloudBuilder
+
+- name: Deploy Cloud Builder using OVA
+  vmware_deploy_ovf:
+    hostname: '{{ mgmtVcsFQDN }}'
+    username: '{{ vCenterUser }}'
+    password: '{{ vCenterPassword }}'
+    validate_certs: False
+    name: '{{ cloudBuilderVmName }}'
+    datastore: '{{ vCenterDatastore }}'
+    disk_provisioning: 'thin'
+    datacenter: '{{ vCenterDataCenter }}'
+    cluster: '{{ vCenterCluster }}'
+    networks:
+       'Network 1': '{{ networkMgmt }}'
+    ova: '{{ cloudBuilderOva }}'
+    power_on: 'yes'
+    fail_on_spec_warnings: 'yes'
+    wait_for_ip_address: 'no'
+    properties:
+      guestinfo.ADMIN_USERNAME: admin
+      guestinfo.ADMIN_PASSWORD: '{{ cloudBuilderPassword }}'		
+      guestinfo.ROOT_PASSWORD: '{{ cloudBuilderPassword }}'
+      guestinfo.hostname: cloudBuilder
+      guestinfo.ip0: '{{ cloudBuilderIP }}'
+      guestinfo.netmask0: '{{ cloudBuilderNetmask }}'
+      guestinfo.gateway: '{{ cloudBuilderGW }}'
+      guestinfo.DNS: '{{ cloudBuilderDNS }}'
+      guestinfo.ntp: '{{ cloudBuilderNTP }}'
+  register: deployOvaCloudBuilder
+
+- debug:
+    msg:
+      - 'Cloud Builder has been deployed with below configuration:'
+      - 'VM name: {{ cloudBuilderVmName }}'
+      - 'Hostname: {{ cloudBuilderVmName }}'
+      - 'VM network config: IP: {{ cloudBuilderIp }}, GW:{{ cloudBuilderGW }}, Netmask:{{ cloudBuilderNetmask }}, DNS: {{ cloudBuilderDNS }}, NTP: {{ cloudBuilderNTP }}'
+  when: deployOvaCloudBuilder is succeeded
+  delegate_to: localhost
+
+- name: Waiting for Cloud Builder to become up and running
+  vmware_guest_tools_wait:
+    hostname: '{{ mgmtVcsFQDN }}'
+    username: '{{ vCenterUser }}'
+    password: '{{ vCenterPassword }}'
+    validate_certs: no
+    name: '{{ cloudBuilderVmName }}'
+    folder: '{{ vCenterVMFolder }}'
+  delegate_to: localhost
